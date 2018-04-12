@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Maps</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<style>
+		#map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+	</style>
+
+</head>
+<body>
+	
+
+	<form>
+		<input id="address"  type="text">
+		<button type="button" onclick="buscarUbicacion()" >Buscar ubicación</button>
+	</form>		
+	
+	<div id="map"></div>
+
+	<script>
+
+		
+		
+
+		function callApiGeo(addr){
+			console.log("Entrando a callApiGeo(), params: address="+addr);
+
+			$.ajax({
+				type: "GET",
+		        url: "https://maps.googleapis.com/maps/api/geocode/json",
+		        data: {
+		            address: addr,
+		            key: "AIzaSyCSeQsRYgffothWx8Cfq-7CgcmP4ehKUvY"
+		        },
+		        dataType: "json",
+		        success: function (result) {
+		            //var data = '{ "name": "Antony", "age": "24" }';
+		            //var json = JSON.parse(data);
+
+		            console.log("Entrando a success...");
+
+		            var json = JSON.stringify(result)
+		            var obj = JSON.parse(json);
+
+		            var lat = obj.results[0].geometry.location.lat;
+		            var lng = obj.results[0].geometry.location.lng;
+		            
+		            console.log("lat="+lat+", lng="+lng);
+		            initMap(lat, lng);
+	    		}
+    		});
+
+		}
+
+		function buscarUbicacion(){
+			console.log("Entrando a buscarUbicacion()...");
+			var address = $("#address").val();
+			console.log(address);
+			callApiGeo(address);
+		}
+
+		
+      	function initMap(latitud, longitud) {
+        		var map = new google.maps.Map(document.getElementById('map'), {
+          		center: {lat: latitud, lng: longitud},
+          		zoom: 17
+        	});
+      	}
+
+	</script>
+
+
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSeQsRYgffothWx8Cfq-7CgcmP4ehKUvY"
+     defer></script>
+
+</body>
+</html>
