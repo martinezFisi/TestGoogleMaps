@@ -30,25 +30,29 @@
 
 	<script>
 
-		
+		var API_GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
+		var APP_KEY = "AIzaSyCSeQsRYgffothWx8Cfq-7CgcmP4ehKUvY";
+		var map;
+		var marker;
 		
 
-		function callApiGeo(addr){
-			console.log("Entrando a callApiGeo(), params: address="+addr);
+		function callApiGeoLatLng(addr){
+			console.log("Entrando a callApiGeoLatLng(), params: address="+addr);
 
+			console.log("Iniciando conexion con API_GEOCODE...");
 			$.ajax({
 				type: "GET",
-		        url: "https://maps.googleapis.com/maps/api/geocode/json",
+		        url: API_GEOCODE_URL,
 		        data: {
 		            address: addr,
-		            key: "AIzaSyCSeQsRYgffothWx8Cfq-7CgcmP4ehKUvY"
+		            key: APP_KEY
 		        },
 		        dataType: "json",
 		        success: function (result) {
 		            //var data = '{ "name": "Antony", "age": "24" }';
 		            //var json = JSON.parse(data);
 
-		            console.log("Entrando a success...");
+		            console.log("Conexion exitosa, obteniendo latitud y longitud");
 
 		            var json = JSON.stringify(result)
 		            var obj = JSON.parse(json);
@@ -63,19 +67,80 @@
 
 		}
 
+		function callApiGeoAddress(latitud, longitud){
+			console.log("Entrando a callApiGeoAddress(), params: [latitud=" + latitud + ", longitud=" + longitud + "]");
+
+			var latlng = latitud + "," + longitud;
+
+			console.log("Iniciando conexion con API_GEOCODE...");
+			$.ajax({
+				type: "GET",
+		        url: API_GEOCODE_URL,
+		        data: {
+		            latlng: latlng,
+		            key: APP_KEY
+		        },
+		        dataType: "json",
+		        success: function (result) {
+		            
+		            console.log("Conexion exitosa, obteniendo address");
+
+		            var json = JSON.stringify(result)
+		            var obj = JSON.parse(json);
+
+		            var address = obj.results[0].formatted_address;
+		            
+		            console.log("address="+address);
+
+		            $("#address").val(address);
+	    		}
+    		});
+
+		}
+
 		function buscarUbicacion(){
 			console.log("Entrando a buscarUbicacion()...");
 			var address = $("#address").val();
 			console.log(address);
-			callApiGeo(address);
+			callApiGeoLatLng(address);
 		}
 
 		
       	function initMap(latitud, longitud) {
-        		var map = new google.maps.Map(document.getElementById('map'), {
+      			console.log("Entrando a initMap(), params[latitud=" + latitud + ", longitud=" + longitud + "]");
+      			console.log("Generando map...");
+        		map = new google.maps.Map(document.getElementById('map'), {
           		center: {lat: latitud, lng: longitud},
           		zoom: 17
         	});
+
+        	console.log("Generando marker...");
+        	marker = new google.maps.Marker({
+	          	map: map,
+	          	draggable: true,
+	          	animation: google.maps.Animation.DROP,
+	          	position: {lat: latitud, lng: longitud}
+        	});
+
+        	console.log("Registrando eventos en el marker, events[click, dragend]");
+        	marker.addListener('click', toggleBounce);
+        	marker.addListener('dragend', dragEnd);
+      	}
+
+      	function toggleBounce() {
+	        if (marker.getAnimation() !== null) {
+	          marker.setAnimation(null);
+	        } else {
+	          marker.setAnimation(google.maps.Animation.BOUNCE);
+	        }
+      	}
+
+      	function dragEnd(){
+      		console.log("Entrando a dragend()");
+      		var lat = marker.getPosition().lat();
+      		var lng = marker.getPosition().lng();
+      		console.log("lat=" + lat + ", lng=" + lng);
+      		callApiGeoAddress(lat, lng);
       	}
 
 	</script>
