@@ -7,6 +7,12 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/alertify.css">
 
+	<link rel="stylesheet" href="assets/demo.css">
+    <link rel="stylesheet" href="assets/navigation-dark.css">
+    <link rel="stylesheet" href="assets/slicknav/slicknav.min.css">
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+
 	<!-- jQuery library -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -31,6 +37,12 @@
 
 	  nav li{
 	  	color: white;
+	  }
+
+	  .menu-navigation-dark a{
+	  	width: 100px !important;
+	  	margin: 1%;
+	  	border-radius: 10px;
 	  }
 
 	</style>
@@ -116,9 +128,27 @@
 					</form>	
 				</div>
 			</div>	
+
+			<div class="panel panel-primary" style="margin-left: 5%; margin-right: 5%">
+				<div class="panel-heading " style="text-align: center;">
+					Filtrar Denuncias por Categoría
+				</div>
+				<div class="panel-body">
+					<nav class="menu-navigation-dark">
+				    <a href="#"><i class="fa fa-camera-retro"></i><span>Robo con Arma</span></a>
+				    <a href="#"><i class="fa fa-code"></i><span>Robo a vehículo</span></a>
+				    <a href="#" class="selected"><i class="fa fa-comment"></i><span>Robo al paso</span></a>
+				    <a href="#"><i class="fa fa-plane"></i><span>Vandalismo</span></a>
+				    <!--<a href="#"><i class="fa fa-heart"></i><span>Favorites</span></a>-->					
+				</div>
+			</div>
+
+</nav>
 	</div>
 
-	<div class="col-sm-8" id="map">Mapa</div>
+	
+		<div class="panel panel-primary col-sm-8" id="map">Mapa</div>
+	
 	
 
 
