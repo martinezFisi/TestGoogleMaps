@@ -3,9 +3,13 @@ var API_GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
 var APP_KEY = "AIzaSyCSeQsRYgffothWx8Cfq-7CgcmP4ehKUvY";
 var map;
 var marker;
-var latitud;
-var longitud;
+var latitud = -12.056015207800758;
+var longitud = -77.08442259999998;
 
+var GUN_IMAGE_URL = 'http://127.0.0.1:8080/gun.png';
+var CAR_IMAGE_URL = 'http://127.0.0.1:8080/car.png';
+var FIGHT_IMAGE_URL = 'http://127.0.0.1:8080/fight.png';
+var RUN_IMAGE_URL = 'http://127.0.0.1:8080/run.png';
 
 
 	function setLatLng(lat, lng){
@@ -207,11 +211,26 @@ var longitud;
 
       	function setMarkers(map, denuncias, categ) {
 
-	        var image = {
-	          //url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-	          url: 'http://127.0.0.1:8080/gun.png',
+      		var urlImage;
 
-	          size: new google.maps.Size(20, 32),
+	        switch(categ){
+	        	case 'RMA':
+	        			urlImage = GUN_IMAGE_URL;
+	        		break;
+	        	case 'RAV':
+	        			urlImage = CAR_IMAGE_URL;
+	        		break;
+	        	case 'VAN':
+	        			urlImage = FIGHT_IMAGE_URL;
+	        		break;
+	        	case 'RAP':
+	        			urlImage = RUN_IMAGE_URL;
+	        		break;
+	        }
+
+	        var image = {
+	          url: urlImage,
+	          size: new google.maps.Size(32, 32),
 	          origin: new google.maps.Point(0, 0),
 	          anchor: new google.maps.Point(0, 32)
 	        };
@@ -229,7 +248,9 @@ var longitud;
 					  "Direccion: "+ denuncia.direccion +"\n" +
 					  "Categoria: "+ denuncia.categoria +"\n" +
 					  "Usuario: "+ denuncia.usuario.username +"\n" +
-					  "Comentario: "+ denuncia.comentario +"\n";
+					  "Comentario: "+ denuncia.comentario +"\n" +
+					  "Fecha: "+ denuncia.date +"\n" +
+					  "Hora: "+ denuncia.time +"\n";
 
 				  console.log(resumen);
 				  console.log(denuncia.latitud + " " + denuncia.longitud);

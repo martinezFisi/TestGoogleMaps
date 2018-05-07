@@ -40,17 +40,9 @@
 	  }
 
 	  .menu-navigation-dark a{
-	  	width: 120px !important;
+	  	width: 100px !important;
 	  	margin: 1%;
 	  	border-radius: 10px;
-	  }
-
-	  
-
-	  .icon-gun{
-	  	background-image: url('http://127.0.0.1:8080/gun64.png') !important;
-	  	background-repeat: no-repeat !important;
-	  	background-position: center !important; 
 	  }
 
 	</style>
@@ -104,74 +96,61 @@
 	  
 	</div>
 
-	<div class="container col-sm-4">
-			<div class="panel panel-primary" style="margin-left: 5%; margin-right: 5%">
-				<div class="panel-heading">
-					Registrar denuncia
-				</div>
-				<div class="panel-body">
-					<form>
-						<div class="input-group">
-						   <input id="address" type="text" class="form-control" placeholder="Ubicacion">
-						   <span class="input-group-btn">
-						        <button onclick="buscarUbicacion()" class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-						   </span>
-						</div></br>
-						<div class="for-group">
-							<label>Categoria</label>
-							<select id="categoria" class="form-control">
-								<option value="RMA">Robo a mano armada</option>
-								<option value="RAV">Robo a vehiculo</option>
-								<option value="VAN">Vandalismo</option>
-								<option value="RAP">Robo al paso</option>
-							</select>
-						</div></br>
-						<div class="for-group">
-							<label>Comentario</label>
-							<textarea id="Comentario" class="form-control" cols="20" rows="5"></textarea>
-						</div>
-
-						</br>
-						<button class="btn btn-primary" type="button" onclick="registrarDenuncia()" >Registrar denuncia</button>
-					</form>	
-				</div>
-			</div>	
-
-			<div class="panel panel-primary" style="margin-left: 5%; margin-right: 5%">
-				<div class="panel-heading " style="text-align: center;">
-					Filtrar Denuncias por Categoría
-				</div>
-				<div class="panel-body">
-					<nav class="menu-navigation-dark">
-				    <a href="#" onclick="return listarDenuncias('RMA')">
-						<img src="http://127.0.0.1:8080/gun64.png">
-				    	<span>Robo con Arma</span></a>
-				    <a href="#" onclick="return listarDenuncias('RAV')">
-						<img src="http://127.0.0.1:8080/car64.png">
-				    	<span>Robo a vehículo</span></a>
-				    <a href="#" onclick="return listarDenuncias('RAP')">
-						<img src="http://127.0.0.1:8080/run64.png">
-				    	<span>Robo al paso</span></a>
-				    <a href="#" onclick="return listarDenuncias('VAN')">
-						<img src="http://127.0.0.1:8080/fight64.png">
-				    	<span>Vandalismo</span></a>
-				    <!--<a href="#"><i class="fa fa-heart"></i><span>Favorites</span></a>-->					
-				</div>
-			</div>
-
-</nav>
-	</div>
+	
 
 	
-		<div class="panel panel-primary col-sm-8" id="map">Mapa</div>
+
+
+	<script>
+
+		$( document ).ready( function() {
+		    
+			    if (navigator.geolocation)
+				{
+					navigator.geolocation.getCurrentPosition(function(objPosition)
+					{
+						var lon = objPosition.coords.longitude;
+						var lat = objPosition.coords.latitude;
+
+						alert("Lat:"+lat+", Long:"+lon);
+
+					}, function(objPositionError)
+					{
+						switch (objPositionError.code)
+						{
+							case objPositionError.PERMISSION_DENIED:
+								alert("No se ha permitido el acceso a la posición del usuario.");
+							break;
+							case objPositionError.POSITION_UNAVAILABLE:
+								alert("No se ha podido acceder a la información de su posición.");
+							break;
+							case objPositionError.TIMEOUT:
+								alert("El servicio ha tardado demasiado tiempo en responder.");
+							break;
+							default:
+								alert("Error desconocido.");
+						}
+					}, {
+						maximumAge: 75000,
+						timeout: 15000
+					});
+				}
+				else
+				{
+					alert("Su navegador no soporta la API de geolocalización.");
+				}
+			}
+		);
+
+		
+
+	</script>
+
+
 	
-	<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSeQsRYgffothWx8Cfq-7CgcmP4ehKUvY"
      defer></script>
-
-	<!-->Librerias propias de JS<-->
-	<script src="js/registrarDenuncias.js"></script>
 
 </body>
 </html>
