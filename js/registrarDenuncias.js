@@ -11,6 +11,8 @@ var CAR_IMAGE_URL = 'http://127.0.0.1:8080/car.png';
 var FIGHT_IMAGE_URL = 'http://127.0.0.1:8080/fight.png';
 var RUN_IMAGE_URL = 'http://127.0.0.1:8080/run.png';
 
+var longitudUsuario;
+var latitudUsuario;
 
 	function setLatLng(lat, lng){
 		latitud = lat;
@@ -131,6 +133,7 @@ var RUN_IMAGE_URL = 'http://127.0.0.1:8080/run.png';
 			} else{
 				console.log(address);
 				callApiGeoLatLng(address);
+				getPosicionUsuario();
 			}
 
 		}
@@ -143,12 +146,27 @@ var RUN_IMAGE_URL = 'http://127.0.0.1:8080/run.png';
 
       		console.log("Entrando a registrarDenuncia()");
 
+      		var user = {
+      			dni: "73253818",
+      			username: "amartinez",
+      			password: "123456",
+      			nombres: "Antony",
+      			apellidos: "Martinez",
+      			edad: 24,
+      			correo: "antonymartinez12@gmail.com",
+      			tipo_usuario: "admin",
+      			celular: "978534454",
+      			latitud: latitudUsuario,
+      			longitud: longitudUsuario
+      		}
+
 			var denuncia = {
 			    direccion: $("#address").val(),
 			    latitud: latitud,
 			    longitud: longitud,
 			    categoria: $("#categoria").val(),
-			    comentario: $("#Comentario").val()
+			    comentario: $("#Comentario").val(),
+			    usuario: user
 			};
 
 			var denunciaJson = JSON.stringify(denuncia);
@@ -268,37 +286,44 @@ var RUN_IMAGE_URL = 'http://127.0.0.1:8080/run.png';
 	        }
     	}
 
-  //     	var facultades = [
-		//     ['FISI', -12.05366494483155, -77.08547939035185, 4],
-		//     ['EDUCACION', -12.054336450637866, -77.08462108346708, 5],
-		//     ['PSICOLOGIA', -12.053413129720905, -77.08713163110502, 3],
-		//     ['ODONTOLOGIA', -12.05366494483155, -77.08593000146635, 2],
-		//     ['ELECTRONICA', -12.055438136933262, -77.08676685141774, 1]
-		// ];
+  
+  function getPosicionUsuario(){
+	console.log("Entrando a getPosicionUsuario()");
 
-  //     	function setMarkers(map) {
-  //       var image = {
-  //         url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-          
-  //         size: new google.maps.Size(20, 32),
-  //         origin: new google.maps.Point(0, 0),
-  //         anchor: new google.maps.Point(0, 32)
-  //       };
-        
-  //       var shape = {
-  //         coords: [1, 1, 1, 20, 18, 20, 18, 1],
-  //         type: 'poly'
-  //       };
+	if (navigator.geolocation)
+	{
+		console.log("Obteniendo posición del usuario...");
+		navigator.geolocation.getCurrentPosition(function(objPosition)
+		{
+			longitudUsuario = objPosition.coords.longitude;
+			latitudUsuario = objPosition.coords.latitude;
 
-  //       for (var i = 0; i < facultades.length; i++) {
-  //         var facultad = facultades[i];
-  //         var marker = new google.maps.Marker({
-  //           position: {lat: facultad[1], lng: facultad[2]},
-  //           map: map,
-  //           icon: image,
-  //           shape: shape,
-  //           title: facultad[0],
-  //           zIndex: facultad[3]
-  //         });
-  //       }
-  // 	}
+			console.log("Latitud del usuario: "+latitudUsuario);
+			console.log("Longitud del usuario: "+longitudUsuario);
+
+		}, function(objPositionError)
+		{
+			switch (objPositionError.code)
+			{
+				case objPositionError.PERMISSION_DENIED:
+				console.log("No se ha permitido el acceso a la posición del usuario.");
+				break;
+				case objPositionError.POSITION_UNAVAILABLE:
+				console.log("No se ha podido acceder a la información de su posición.");
+				break;
+				case objPositionError.TIMEOUT:
+				console.log("El servicio ha tardado demasiado tiempo en responder.");
+				break;
+				default:
+				console.log("Error desconocido.");
+			}
+		}, {
+			maximumAge: 75000,
+			timeout: 15000
+		});
+	}
+	else
+	{
+		console.log("Su navegador no soporta la API de geolocalización.");
+	}
+}
