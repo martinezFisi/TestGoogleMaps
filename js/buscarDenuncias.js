@@ -8,8 +8,8 @@ var fecha = date.getFullYear() + '-' +
 var recientes = true;
 var cercaAMi = true;
 
-var latitudUsuario;
-var longitudUsuario;
+var latitudUsuario = null;
+var longitudUsuario = null;
 
 $(function () {
 	$('#pickyDate').datepicker({
@@ -50,7 +50,8 @@ function buscarDenuncias(){
 			cat: $("#categoria").val(),
 			fec: $('#pickyDate').datepicker('getFormattedDate'),
 			rec: recientes,
-			cerca: $("#cercania").val()
+			cerca: $("#cercania").val(),
+			distancia: $("#distanciaKM").val()
 		},
 		success: 
 			function (denuncias) {

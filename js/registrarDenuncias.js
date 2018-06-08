@@ -287,7 +287,7 @@ var latitudUsuario;
     	}
 
   
-  function getPosicionUsuario(){
+function getPosicionUsuario(){
 	console.log("Entrando a getPosicionUsuario()");
 
 	if (navigator.geolocation)
@@ -326,4 +326,86 @@ var latitudUsuario;
 	{
 		console.log("Su navegador no soporta la API de geolocalización.");
 	}
+}
+
+
+
+function login(){
+
+	console.log("Entrando a login...");
+	console.log("Iniciando conexión con Web Service Rest[URL=/usuarios/login] ....");
+
+	$.ajax({
+		type: "GET",
+        url: "http://127.0.0.1:8080/usuarios/login",
+        data: {
+            userName: $("#userName").val(),
+            password: $("#password").val()
+        },
+        dataType: "json",
+        success: function (result) {
+            
+            console.log("Conexion exitosa, obteniendo usuario autenticado...");
+
+            var usuarioJson = JSON.stringify(result)
+            
+            console.log("json="+usuarioJson);
+            console.log("result.username="+result.username);
+
+            setCookie("username=",result.username,1);
+            setCookie("password=",result.password,1);
+
+            $('#loginModal').modal('hide');
+            
+            alertify.success("Usuario autenticado correctamente");
+		},
+		error: function (jqXHR, exception) {
+	        var msg = '';
+	        if (jqXHR.status === 0) {
+	            msg = 'Not connect.\n Verify Network.';
+	        } else if (jqXHR.status == 404) {
+	            msg = 'Requested page not found. [404]';
+	        } else if (jqXHR.status == 500) {
+	            msg = 'Internal Server Error [500].';
+	        } else if (exception === 'parsererror') {
+	            msg = 'Requested JSON parse failed.';
+	        } else if (exception === 'timeout') {
+	            msg = 'Time out error.';
+	        } else if (exception === 'abort') {
+	            msg = 'Ajax request aborted.';
+	        } else {
+	            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+	        }
+
+	        console.log(msg);
+
+	        alertify.error("Usuario no auntenticado, intentalo de nuevo");
+	    }
+
+	});
+
+}
+
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
